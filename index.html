@@ -1,32 +1,82 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QR 코드 스캐너</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h2 {
+      color: #2f3640;
+      margin-bottom: 24px;
+      font-size: 1.8em;
+    }
+
+    #reader {
+      width: 90vw;
+      max-width: 500px;
+      height: 90vw;
+      max-height: 500px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      background: #ffffff;
+    }
+
+    #result {
+      margin-top: 24px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #273c75;
+    }
+
+    a.result-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: #0097e6;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h2>QR 코드를 스캔하세요</h2>
-  <div id="reader" style="width: 300px; height: 300px;"></div>
-  <p id="result"></p>
+  <h2>📷 QR 코드 스캔</h2>
+  <div id="reader"></div>
+  <p id="result">스캔한 QR 코드가 여기에 표시됩니다.</p>
+  <a id="resultLink" class="result-link" href="#" target="_blank" style="display: none;">🔗 QR 결과로 이동</a>
 
   <script>
     const resultElem = document.getElementById("result");
+    const resultLink = document.getElementById("resultLink");
 
     function onScanSuccess(decodedText) {
-      resultElem.textContent = "📌 QR 결과: " + decodedText;
-      html5QrCode.stop(); // 스캔 후 정지
+      resultElem.textContent = "✅ QR 결과: " + decodedText;
+      resultLink.href = decodedText;
+      resultLink.style.display = "inline-block";
+      resultLink.textContent = "🔗 QR 결과로 이동";
+      html5QrCode.stop();
     }
 
     function onScanFailure(error) {
-      // 실패해도 아무 메시지 안 띄움
+      // do nothing
     }
 
     const html5QrCode = new Html5Qrcode("reader");
     html5QrCode.start(
-      { facingMode: "environment" }, // 후면 카메라
-      { fps: 10, qrbox: 250 },
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 300, height: 300 } },
       onScanSuccess,
       onScanFailure
     );
