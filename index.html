@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR 코드 스캐너</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>QR 코드를 스캔하세요</h2>
+  <div id="reader" style="width: 300px; height: 300px;"></div>
+  <p id="result"></p>
+
+  <script>
+    const resultElem = document.getElementById("result");
+
+    function onScanSuccess(decodedText) {
+      resultElem.textContent = "📌 QR 결과: " + decodedText;
+      html5QrCode.stop(); // 스캔 후 정지
+    }
+
+    function onScanFailure(error) {
+      // 실패해도 아무 메시지 안 띄움
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" }, // 후면 카메라
+      { fps: 10, qrbox: 250 },
+      onScanSuccess,
+      onScanFailure
+    );
+  </script>
+</body>
+</html>
